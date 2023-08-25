@@ -325,7 +325,7 @@ public class BaseDeDonnee {
                 Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/geldverwalten_db", "root", "");
                 PreparedStatement pst=con.prepareStatement(query);
 
-                pst.setString(1, projet.getStatut());
+                pst.setInt(1, 1);
                 pst.setString(2, projet.getNomProjet());
                 pst.setInt(3, projet.getIdUser());
 
@@ -526,7 +526,7 @@ public class BaseDeDonnee {
 
 
 
-    public ArrayList<String> recherchee() {
+    public ArrayList<DEntres> recherchee() {
 
         ArrayList<String> listedesdate = new ArrayList<>();
         ArrayList<String> lists = new ArrayList<String>();
@@ -630,11 +630,11 @@ public class BaseDeDonnee {
 
 
 
-        return lists;
+        return listedesentres;
 
     }
 
-    public ArrayList<String> recherches(){
+    public ArrayList<DSortie> recherches(){
 
         ArrayList<String> listedesdates = new ArrayList<>();
         ArrayList<String> listedesprojets = new ArrayList<>();
@@ -663,7 +663,7 @@ public class BaseDeDonnee {
 
                 String vales="               [S] "+message+" : "+montants+" FCFA"  ;
 
-                DSortie sortie=new DSortie(idproj,montants,message,vales,inputdates);
+                DSortie sortie=new DSortie(idproj,getProjetById(idproj).getNomProjet(),montants,message,vales,inputdates);
 
                 listedesortie.add(sortie);
 
@@ -763,7 +763,7 @@ public class BaseDeDonnee {
         System.out.println("sortie list");
 
 
-        return lists;
+        return listedesortie;
 
     }
 
@@ -910,7 +910,7 @@ public class BaseDeDonnee {
 
                 projet.setId(rs.getInt("id"));
                 projet.setNomProjet(rs.getString("nomprojet"));
-                projet.setStatut(rs.getString("statut"));
+                projet.setStatut(rs.getInt("statut"));
             }
 
         }

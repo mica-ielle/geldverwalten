@@ -7,6 +7,7 @@ public class DSortie {
 
     private int id;
     private int idProjet;
+    private String nomProjet;
     private int montant;
     private String message;
     private String val;
@@ -28,6 +29,14 @@ public class DSortie {
 
     public DSortie(int idProjet, int montant, String message, String val, Date date) {
         this.idProjet = idProjet;
+        this.montant = montant;
+        this.message = message;
+        this.val = val;
+        this.date = date;
+    }
+    public DSortie(int idProjet,String nomProjet, int montant, String message, String val, Date date) {
+        this.idProjet = idProjet;
+        this.nomProjet = nomProjet;
         this.montant = montant;
         this.message = message;
         this.val = val;
@@ -80,5 +89,13 @@ public class DSortie {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getNomProjet() {
+        return nomProjet;
+    }
+
+    public void setNomProjet(String nomProjet) {
+        this.nomProjet = nomProjet;
     }
 }

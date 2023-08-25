@@ -4,20 +4,20 @@ public class Projet {
 
     private int id;
     private int idUser;
-    private String statut;
+    private int statut;
     private String nomProjet;
 
     public Projet() {
     }
 
-    public Projet(int id,int idUser, String statut, String nomProjet) {
+    public Projet(int id,int idUser, int statut, String nomProjet) {
         this.id = id;
         this.idUser = idUser;
         this.statut = statut;
         this.nomProjet = nomProjet;
     }
 
-    public Projet(String statut, String nomProjet) {
+    public Projet(int statut, String nomProjet) {
         this.statut = statut;
         this.nomProjet = nomProjet;
     }
@@ -38,11 +38,11 @@ public class Projet {
         this.id = id;
     }
 
-    public String getStatut() {
+    public int getStatut() {
         return statut;
     }
 
-    public void setStatut(String statut) {
+    public void setStatut(int statut) {
         this.statut = statut;
     }
 

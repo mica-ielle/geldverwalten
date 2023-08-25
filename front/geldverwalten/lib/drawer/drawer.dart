@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:geldverwalten/pages/Accueil.dart';
+import 'package:geldverwalten/pages/AddEntree.dart';
+import 'package:geldverwalten/pages/ListEntree.dart';
+import 'package:geldverwalten/pages/ListSortie.dart';
 
 
 class InkWellDrawer extends StatelessWidget {
@@ -28,19 +32,31 @@ class InkWellDrawer extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const Text("utilisateurActuel.prenoms", style: TextStyle(color: Colors.white, fontSize: 25.0),)
+                  const Text("utilisateur", style: TextStyle(color: Colors.white, fontSize: 25.0),)
                 ],
               )),
-          CustomListTile(Icons.person_outlined, 'Mon profile', ()=>{
+          CustomListTile(Icons.home_outlined, 'Accueil', ()=>{
             Navigator.pop(context),
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const Text("mettre le chemin a la place de ''const Text('...')'' "))
+                MaterialPageRoute(builder: (context) => Accueil(title: "title"))
             )
           }),
-          CustomListTile(Icons.shopping_cart_outlined, 'Mes commandes', ()=>{
+          CustomListTile(Icons.input_outlined, 'Ajouter une entrée', ()=>{
             Navigator.pop(context),
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const Text("mettre le chemin a la place de ''const Text('...')'' "))
+                MaterialPageRoute(builder: (context) => AddEntree(title: "title"))
+            )
+          }),
+          CustomListTile(Icons.inbox_outlined, 'Liste des entrées', ()=>{
+            Navigator.pop(context),
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ListEntree(title: "title"))
+            )
+          }),
+          CustomListTile(Icons.outbox_outlined, 'Liste des sorties', ()=>{
+            Navigator.pop(context),
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ListSortie(title: "title"))
             )
           }),
           CustomListTile(Icons.logout, 'Se déconnecter', () async {
@@ -73,7 +89,7 @@ class InkWellDrawer extends StatelessWidget {
                 });
 
           }),
-          CustomListTile(Icons.shopping_cart_outlined, 'A propos de notre restaurant', ()=>{
+          CustomListTile(Icons.question_mark_outlined, 'A propos', ()=>{
             Navigator.pop(context),
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const Text("mettre le chemin a la place de ''const Text('...')'' "))
