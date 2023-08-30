@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:geldverwalten/Model/soldeService.dart';
 import 'package:geldverwalten/api/ApiCall.dart';
 import 'package:geldverwalten/drawer/drawer.dart';
 import 'package:geldverwalten/pages/ProjetInfo.dart';
 import 'package:geldverwalten/widget/Boutton.dart';
+
+import '../Model/ProjetService.dart';
 
 class Accueil extends StatefulWidget {
   const Accueil({super.key, required this.title});
@@ -18,18 +21,12 @@ class _AccueilState extends State<Accueil> {
 
   final TextEditingController nomprojet = TextEditingController();
 
-
-  int solde = 0;
-
-  void retourneSolde() async {
-    solde = await getSolde();
-  }
-
+  late Future<List<solde>> lesolde;
   @override
   void initState() {
-    retourneSolde();
     // TODO: implement initState
     super.initState();
+    lesolde = soldeService().getSolde() ;
   }
 
 
@@ -50,61 +47,75 @@ class _AccueilState extends State<Accueil> {
         ),
       ),
 
-      body: SingleChildScrollView(
-        child: Center(
-            child: Stack(
-              alignment: AlignmentDirectional.topCenter,
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                    margin: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height / 2 - 300),
-                    decoration: const BoxDecoration(
-                        color: Colors.yellow,
-                        borderRadius: BorderRadius.all(Radius.circular(360))),
-                    height: 220,
-                    width: 220
-                ),
-                Container(
-                  margin: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height / 2 - 270),
-                  decoration: BoxDecoration(
-                      color: solde<0?Colors.red:Colors.green,
-                      borderRadius: const BorderRadius.all(Radius.circular(360))),
-                  height: 160,
-                  width: 160,
-                  child: Padding(
-                      padding: const EdgeInsets.only(top: 60,left: 10, right: 10),
-                      child: Text(solde.toString(),style: const TextStyle(color:Colors.white,fontSize: 35),textAlign: TextAlign.center,)
-                  ),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: MediaQuery.of(context).size.height / 1.9,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      body:Center(
+        child: FutureBuilder<List<solde>>(
+          future: lesolde,
+          builder: ((context, snapshot){
+            if(snapshot.hasData){
+              return SingleChildScrollView(
+                child: Center(
+                    child: Stack(
+                      alignment: AlignmentDirectional.topCenter,
+                      clipBehavior: Clip.none,
                       children: [
-                        buildButton("Nouveau Projet", Colors.green, () {
-                          newProjet();
-                        }),
-                        buildButton("Projet en Cours", Colors.green, () {
-                          Navigator.push(context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) {
-                                    return const ProjetInfo(title: "title");
-                                  }));
-                        }),
+                        Container(
+                            margin: EdgeInsets.only(
+                                top: MediaQuery.of(context).size.height / 2 - 300),
+                            decoration: const BoxDecoration(
+                                color: Colors.yellow,
+                                borderRadius: BorderRadius.all(Radius.circular(360))),
+                            height: 220,
+                            width: 220
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height / 2 - 270),
+                          decoration: BoxDecoration(
+                              color: snapshot.data![0].montant<0?Colors.red:Colors.green,
+                              borderRadius: const BorderRadius.all(Radius.circular(360))),
+                          height: 160,
+                          width: 160,
+                          child: Padding(
+                              padding: const EdgeInsets.only(top: 60,left: 10, right: 10),
+                              child: Text(snapshot.data![0].montant.toString(),style: const TextStyle(color:Colors.white,fontSize: 35),textAlign: TextAlign.center,)
+                          ),
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: MediaQuery.of(context).size.height / 1.9,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                buildButton("Nouveau Projet", Colors.green, () {
+                                  newProjet();
+                                }),
+                                buildButton("Projet en Cours", Colors.green, () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) {
+                                            return const ProjetInfo(title: "title");
+                                          }));
+                                }),
 
+                              ],
+                            ),
+                          ],
+                        ),
                       ],
-                    ),
-                  ],
-                ),
-              ],
-            )),
+                    )),
+              );
+            }else if(snapshot.hasError){
+
+            }
+            return CircularProgressIndicator();
+          }),
+        ),
       )
+
+
 
     );
   }

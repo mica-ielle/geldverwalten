@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:geldverwalten/api/ApiCall.dart';
 import 'package:geldverwalten/Model/entreeServices.dart';
 import 'package:geldverwalten/drawer/drawer.dart';
+import 'package:geldverwalten/pages/Accueil.dart';
 import 'package:geldverwalten/pages/ProjetInfo.dart';
 import 'package:geldverwalten/widget/Boutton.dart';
 import 'package:geldverwalten/widget/EntreePresentation.dart';
+
+import '../Model/soldeService.dart';
 
 
 class ListEntree extends StatefulWidget {
@@ -22,75 +25,100 @@ class _ListEntreeState extends State<ListEntree> {
   final TextEditingController nomprojet = TextEditingController();
 
   late Future<List<entree>> listeEntree;
+  late Future<List<solde>> lesolde;
 
 @override
   void initState() {
     // TODO: implement initState
     super.initState();
     listeEntree = entreeService().getEntree() ;
+    lesolde = soldeService().getSolde() ;
   }
 
-  int solde = 1000000;
 
 
   @override
   Widget build(BuildContext context) {
     print("liste des entrees");
 
-    return Scaffold(
-        drawer: const InkWellDrawer(),
-        appBar: AppBar(
-          centerTitle: true,
-          //backgroundColor: Colors.green,
-          elevation: 0,
-          actions: const [Text("10000000",style: TextStyle(fontSize: 50),),],
-        ),
+    return WillPopScope(
+        child: Scaffold(
+            drawer: const InkWellDrawer(),
+            appBar: AppBar(
+              centerTitle: true,
+              //backgroundColor: Colors.green,
+              elevation: 0,
+              actions:  [
+                FutureBuilder<List<solde>>(
+                  future: lesolde,
+                  builder: ((context, snapshot){
+                    if(snapshot.hasData){
+                      return Text(snapshot.data![0].montant.toString(),style: const TextStyle(fontSize: 50),);
+                    }else if(snapshot.hasError){
 
-        body: Center(
-          child: FutureBuilder<List<entree>>(
-            future: listeEntree,
-            builder: ((context, snapshot){
-              if(snapshot.hasData){
-                return SingleChildScrollView(
-                  child: Center(
-                    child: Container(
-                      margin: EdgeInsets.only(top: 20,left: 15, right: 15),
-                      child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          const Text("Toutes les entrées"),
-                          Container(
-                            margin: EdgeInsets.only(top: 50,left: 5, right: 5),
-                            height: MediaQuery.of(context).size.height/1.3,
-                            child: ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                itemCount: snapshot.data!.length, //nombre de projets dans la bd
-                                itemBuilder: (context, index) {
-                                  entree _entree = snapshot.data![index];
-                                  return InkWell(
-                                    onLongPress: () {
-                                      //selection
-                                    },
-                                    onTap: () {
+                    }
+                    return CircularProgressIndicator();
+                  }),
+                ),
 
-                                    },
-                                    child:EntreePresentation(message: _entree.origine,montant: _entree.montant,date: _entree.date,),
-                                  );
-                                }),
+              ],
+            ),
+
+            body: Center(
+              child: FutureBuilder<List<entree>>(
+                future: listeEntree,
+                builder: ((context, snapshot){
+                  if(snapshot.hasData){
+                    return SingleChildScrollView(
+                      child: Center(
+                        child: Container(
+                          margin: EdgeInsets.only(top: 20,left: 15, right: 15),
+                          child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              const Text("Toutes les entrées"),
+                              Container(
+                                margin: EdgeInsets.only(top: 50,left: 5, right: 5),
+                                height: MediaQuery.of(context).size.height/1.3,
+                                child: ListView.builder(
+                                    scrollDirection: Axis.vertical,
+                                    itemCount: snapshot.data!.length, //nombre de projets dans la bd
+                                    itemBuilder: (context, index) {
+                                      entree _entree = snapshot.data![index];
+                                      return InkWell(
+                                        onLongPress: () {
+                                          //selection
+                                        },
+                                        onTap: () {
+
+                                        },
+                                        child:EntreePresentation(message: _entree.origine,montant: _entree.montant,date: _entree.date,),
+                                      );
+                                    }),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),),
-                );
-              }else if(snapshot.hasError){
+                        ),),
+                    );
+                  }else if(snapshot.hasError){
 
-              }
+                  }
 
-              return CircularProgressIndicator();
-            }),
-          ),
-        )
+                  return CircularProgressIndicator();
+                }),
+              ),
+            )
 
-    );
+        ),
+        onWillPop: (){
+          print("object");
+          Navigator.push(context,
+              MaterialPageRoute(builder: (BuildContext context) {
+                return Accueil(title: "title");
+              }));
+          //Navigator.pop(context,false);
+          return Future.value(false);
+        });
+
   }
 
   Future<void> modifEntree()async{

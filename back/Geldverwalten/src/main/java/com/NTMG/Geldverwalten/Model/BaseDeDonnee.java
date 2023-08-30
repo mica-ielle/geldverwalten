@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class BaseDeDonnee {
 
@@ -64,6 +65,8 @@ public class BaseDeDonnee {
                 System.out.println("register successfully");
                 rep=1;
 
+                con.close();
+
             }
             catch (Exception exc){
                 System.out.println(exc);
@@ -102,6 +105,7 @@ public class BaseDeDonnee {
                 h=h+1;
             }
 
+            con.close();
         }
         catch (Exception exc){
             System.out.println(exc);
@@ -143,6 +147,7 @@ public class BaseDeDonnee {
                 System.out.println(membre);
             }
 
+            con.close();
         }
         catch (Exception exc){
             System.out.println(exc+"  error connect");
@@ -175,6 +180,7 @@ public class BaseDeDonnee {
                 System.out.println(pws+" = "+encryptedPws+" "+mail);
             }
 
+            con.close();
         }
         catch (Exception exc){
             System.out.println(exc+"  error connect");
@@ -215,6 +221,7 @@ public class BaseDeDonnee {
             }
             user = new user(mail,passWord);
 
+            con.close();
         }
         catch (Exception exc){
             System.out.println(exc+"  error connect");
@@ -251,6 +258,7 @@ public class BaseDeDonnee {
                 System.out.println("register successfully");
                 rep=1;
 
+                con.close();
             }
             catch (Exception exc){
                 System.out.println(exc);
@@ -299,6 +307,7 @@ public class BaseDeDonnee {
                 System.out.println("register successfully");
                 rep=1;
 
+                con.close();
             }
             catch (Exception exc){
                 System.out.println(exc);
@@ -335,6 +344,7 @@ public class BaseDeDonnee {
                 System.out.println("register successfully");
                 rep=1;
 
+                con.close();
             }
             catch (Exception exc){
                 System.out.println(exc);
@@ -372,6 +382,7 @@ public class BaseDeDonnee {
                 h=h+1;
             }
 
+            con.close();
         }
         catch (Exception exc){
             System.out.println(exc);
@@ -385,8 +396,9 @@ public class BaseDeDonnee {
 
     }
 
-    public int countProjet() throws SQLException{
+    public ArrayList countProjet() throws SQLException{
 
+        ArrayList dateList = new ArrayList<>();
 
         int h=0;
 
@@ -397,20 +409,23 @@ public class BaseDeDonnee {
 
             Statement stmt = con.createStatement();
 
-            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM `dprojet`");
+            ResultSet rs = stmt.executeQuery("SELECT DISTINCT `date` FROM `dsortie`");
 
 
 
             while(rs.next()){
+                Date inputdates = rs.getDate("date");
+                dateList.add(inputdates);
                 h=h+1;
             }
 
+            con.close();
         }
         catch (Exception exc){
             System.out.println(exc);
         }
 
-        return h;
+        return dateList;
     }//ok
 
     public int modifsortie(DSortie sortie) throws SQLException{
@@ -437,6 +452,7 @@ public class BaseDeDonnee {
                 System.out.println("successfully updated");
                 rep=1;
 
+                con.close();
             }
             catch (Exception exc){
                 System.out.println(exc);
@@ -473,6 +489,7 @@ public class BaseDeDonnee {
 
             rep=1;
 
+            con.close();
         }
         catch (Exception exc){
             System.out.println(exc);
@@ -486,9 +503,9 @@ public class BaseDeDonnee {
 
     }//ok
 
-    public int bilan() throws SQLException{
+    public solde bilan() throws SQLException{
 
-
+        solde lesolde = new solde();
 
         int h=0,h1=0,h2=0;
 
@@ -515,12 +532,14 @@ public class BaseDeDonnee {
                 h2 =h2+ rs1.getInt("montant");
             }
 
+            con.close();
         }
         catch (Exception exc){
             System.out.println(exc);
         }
         h=h1-h2;
-        return h;
+        lesolde = new solde(h);
+        return lesolde;
 
     }//ok
 
@@ -580,6 +599,7 @@ public class BaseDeDonnee {
                 h=h+1;
             }
 
+            con.close();
         }
         catch (Exception exc){
             System.out.println(exc);
@@ -705,6 +725,7 @@ public class BaseDeDonnee {
                 h=h+1;
             }
 
+            con.close();
         }
         catch (Exception exc){
             System.out.println(exc);
@@ -767,7 +788,7 @@ public class BaseDeDonnee {
 
     }
 
-    public ArrayList<String> recherchesproj(int idprojet) throws SQLException {
+    public ArrayList<DSortie> recherchesproj(int idprojet) throws SQLException {
 
         ArrayList<String> listedesdates = new ArrayList<>();
         ArrayList<String> listedesprojets = new ArrayList<>();
@@ -807,7 +828,7 @@ public class BaseDeDonnee {
                 String vales="               [S] "+message+" : "+montants+" FCFA"  ;
 
                 System.out.println("valeur"+vales);
-                DSortie sortie=new DSortie(idproj,montants,message,vales,inputdates);
+                DSortie sortie=new DSortie(idproj,getProjetById(idproj).getNomProjet(),montants,message,vales,inputdates);
 
                 listedesortie.add(sortie);
 
@@ -833,6 +854,7 @@ public class BaseDeDonnee {
                 h=h+1;
             }
 
+            con.close();
         }
         catch (Exception exc){
             System.out.println(exc);
@@ -881,7 +903,7 @@ public class BaseDeDonnee {
 
 
 
-        return lists;
+        return listedesortie;
 
     }
 
@@ -913,6 +935,7 @@ public class BaseDeDonnee {
                 projet.setStatut(rs.getInt("statut"));
             }
 
+            con.close();
         }
         catch (Exception exc){
             System.out.println(exc+"  error connect");
@@ -952,6 +975,7 @@ public class BaseDeDonnee {
                 System.out.println(membre);
             }
 
+            con.close();
         }
         catch (Exception exc){
             System.out.println(exc+"  error connect");
@@ -987,6 +1011,7 @@ public class BaseDeDonnee {
 
             }
 
+            con.close();
         }
         catch (Exception exc){
             System.out.println(exc+"  error connect id projet");
@@ -996,6 +1021,41 @@ public class BaseDeDonnee {
         return id;
     }
 
+    public ArrayList<Projet> listeProjets() {
+
+        ArrayList<Projet> projetList = new ArrayList<>();
+
+        try{
+
+
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/geldverwalten_db", "root", "");
+
+            Statement stmt = con.createStatement();
+
+            ResultSet rs = stmt.executeQuery("SELECT * FROM `dprojet` ");
+
+
+
+            while(rs.next()){
+                Projet projet = new Projet();
+
+                projet.setId(rs.getInt("id"));
+                projet.setIdUser(rs.getInt("idUser"));
+                projet.setNomProjet(rs.getString("nomprojet"));
+                projet.setStatut(rs.getInt("statut"));
+
+                projetList.add(projet);
+            }
+            con.close();
+        }
+        catch (Exception exc){
+            System.out.println(exc+"  error connect");
+        }
+        System.out.println("  get permission name");
+
+        return projetList;
+
+    }
 }
 
 

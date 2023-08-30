@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -208,11 +209,11 @@ public class controller {
         }
 
     }
-    // nombre de projet en cours
+    // nombre de date des sorties
     @RequestMapping(value = "/nbProjet", method = RequestMethod.GET, consumes= MediaType.APPLICATION_JSON_VALUE)
-    public Object nbProjet(HttpServletResponse response) throws SQLException{
+    public Object nbDate(HttpServletResponse response) throws SQLException{
 
-        int result = bd.countProjet();
+        List result = bd.countProjet();
 
             return result;
 
@@ -251,9 +252,9 @@ public class controller {
     @RequestMapping(value = "/solde", method = RequestMethod.GET, consumes= MediaType.APPLICATION_JSON_VALUE)
     public Object solde(HttpServletResponse response) throws SQLException{
 
-        int result = bd.bilan();
+        solde result = bd.bilan();
 
-        if(result==1){
+        if(result.getMontant()==1){
             response.setStatus(400);
             return new ApiError(400,"une erreur est survenu","bad request");
         }else{
@@ -290,11 +291,20 @@ public class controller {
 
     }
     // toutes les sorties d'un projet
-    @RequestMapping(value = "/getProjet/{id}", method = RequestMethod.POST, consumes= MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/getProjet/{id}", method = RequestMethod.GET, consumes= MediaType.APPLICATION_JSON_VALUE)
     public Object getProjet(@PathVariable("id") int id, HttpServletResponse response) throws SQLException{
 
         System.out.println("eeee "+id);
         List result = bd.recherchesproj(id);
+
+            return result;
+
+    }
+    // tous les projets
+    @RequestMapping(value = "/getProjets", method = RequestMethod.GET, consumes= MediaType.APPLICATION_JSON_VALUE)
+    public Object getProjets(HttpServletResponse response) throws SQLException{
+
+        List result = bd.listeProjets();
 
         if(result.isEmpty()){
             response.setStatus(400);
@@ -309,3 +319,5 @@ public class controller {
 
 
 }
+
+

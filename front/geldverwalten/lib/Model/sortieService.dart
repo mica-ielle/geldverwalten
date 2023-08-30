@@ -46,4 +46,53 @@ class sortieService{
       throw Exception('HTTP failed ${response.statusCode}');
     }
   }
+
+  Future<List<sortie>> getSortieProjet(int idProjet) async {
+    final response = await http
+        .get(Uri.parse(hostUrl+"getProjet/$idProjet"),headers: {
+      "content-type":"application/json",
+      'Accept':'*/*',
+      'Access-Control-Allow-Origin':"*"
+    },);
+
+    if(response.statusCode==200){
+      final data = jsonDecode(response.body);
+
+      final List<sortie> list = [];
+
+      for(var i=0; i<data.length; i++){
+        final entry = data[i];
+        list.add(sortie.fromJson(entry));
+      }
+      return list;
+    }else{
+      throw Exception('HTTP failed ${response.statusCode}');
+    }
+  }
+
+}
+void setSortie(String raison, String montant , int idProjet) async {
+  var data =
+  {
+    "montant" : montant,
+    "message" : raison
+  };
+
+  final response = await http
+      .post(Uri.parse(hostUrl+"addSortie/$idProjet"),headers: {
+    "content-type":"application/json",
+    'Accept':'*/*',
+    'Access-Control-Allow-Origin':"*"
+  },
+      body: jsonEncode(data)
+  );
+
+  if(response.statusCode==200){
+    final res = jsonDecode(response.body);
+
+
+    return res;
+  }else{
+    throw Exception('HTTP failed ${response.statusCode}');
+  }
 }

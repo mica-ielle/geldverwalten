@@ -45,3 +45,31 @@ class entreeService{
     }
   }
 }
+void addEntree(String origine, int montant)async{
+
+
+  var data =
+  {
+    "montant" : montant,
+    "message" : origine
+  };
+
+
+  print("load entree");
+
+  const url = hostUrl+'addEntree';
+  final uri = Uri.parse(url);
+  final response = await http.post(uri,
+      headers: {"content-type":"application/json"},
+      body: jsonEncode(data));
+  final body = response.body;
+
+  print("body");
+  print(body);
+
+  final json = jsonDecode(body);
+
+  print("entree loaded");
+
+  return json;
+}
